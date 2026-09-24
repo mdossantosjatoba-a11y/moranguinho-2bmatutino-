@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Moranguinho: Mundo dos Morangos</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#ffdce9;color:#6b2845}
+button{font:inherit;border:0;cursor:pointer}.app{min-height:100vh;overflow:hidden;background:linear-gradient(#ffd6e5,#fff5f8)}
+.top{display:flex;justify-content:space-between;padding:12px;position:absolute;top:0;left:0;right:0;z-index:5}.pill{background:#fff;border:2px solid #fff;border-radius:20px;padding:8px 13px;font-weight:800;box-shadow:0 4px 14px #8b315d22}
+.screen{min-height:100vh;padding:80px 18px 25px;display:none;flex-direction:column;align-items:center}.screen.active{display:flex}
+.logo{font-size:48px;font-weight:900;color:#d72f63;text-shadow:2px 3px #fff;margin:20px 0 4px;text-align:center}
+.subtitle{text-align:center;margin:0 0 25px}.mainbtn{background:#df3166;color:#fff;border-radius:25px;padding:14px 30px;font-weight:900;box-shadow:0 5px #a61e49;margin:7px}.mainbtn:active{transform:translateY(3px);box-shadow:0 2px #a61e49}
+.panel{width:min(94vw,500px);background:#ffffffd9;border:3px solid #fff;border-radius:28px;padding:18px;box-shadow:0 12px 30px #8d2d5422}
+.map{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.level{padding:20px 8px;border-radius:22px;background:#ffe8f0;border:3px solid #fff;font-weight:900;color:#9d3157}.level.lock{opacity:.5}
+.shop{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.item{background:#fff0f5;border-radius:20px;padding:14px;text-align:center;border:2px solid #fff}.avatar{font-size:52px}.price{font-weight:900;color:#d72f63}
+#game{position:relative;width:100vw;height:100vh;background:#9fdc8f;overflow:hidden}.hud{position:absolute;z-index:4;top:10px;left:10px;right:10px;display:flex;justify-content:space-between}.road{position:absolute;left:12%;right:12%;top:0;bottom:0;background:#ffd3df}.stripe{position:absolute;left:49%;width:2%;height:45px;background:#fff7;animation:road 0.55s linear infinite}@keyframes road{to{transform:translateY(80px)}}
+#hero{position:absolute;bottom:105px;width:65px;height:80px;left:50%;transform:translateX(-50%);font-size:62px;z-index:3;filter:drop-shadow(0 5px 2px #70243b33)}
+.obj{position:absolute;font-size:42px;z-index:2}.controls{position:absolute;z-index:5;bottom:15px;left:0;right:0;display:flex;justify-content:center;gap:25px}.ctrl{width:76px;height:62px;border-radius:22px;background:#ffffffbb;color:#d72f63;font-size:30px;font-weight:bold}
+#gameover{position:absolute;inset:0;z-index:10;background:#7b294f77;display:none;align-items:center;justify-content:center}.card{background:#fff8fb;border:4px solid #fff;border-radius:30px;padding:28px;text-align:center;width:min(90%,420px)}
+.small{font-size:13px;opacity:.7}.back{margin-top:15px;background:#fff;color:#b32a55;border:2px solid #ffd0de;padding:9px 18px;border-radius:18px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="pill">🍓 <span id="coins">0</span></div><div class="pill">🌟 <span id="stars">0</span></div></div>
+
+<section id="home" class="screen active">
+<div class="logo">🍓 Moranguinho</div><p class="subtitle">Mundo dos Morangos</p>
+<div style="font-size:105px;margin:5px">🍓</div>
+<div class="panel" style="text-align:center"><p>Explore a cidade, colete morangos, desbloqueie fases e compre novos personagens!</p>
+<button class="mainbtn" onclick="show('map')">JOGAR 🍓</button><br>
+<button class="mainbtn" onclick="show('shop')">LOJA 🛍️</button></div>
+<p class="small">Um jogo original inspirado no clima fofo de histórias de morangos.</p>
+</section>
+
+<section id="map" class="screen">
+<h1>🗺️ Cidade dos Morangos</h1><p>Escolha uma fase:</p>
+<div class="panel map">
+<button class="level" onclick="startGame(1)">🌷<br>Jardim</button>
+<button class="level" onclick="startGame(2)">🍰<br>Doceria</button>
+<button class="level" onclick="startGame(3)">🌳<br>Floresta</button>
+<button class="level lock" id="l4">🏰<br>Castelo 🔒</button>
+</div><button class="back" onclick="show('home')">Voltar</button>
+</section>
+
+<section id="shop" class="screen">
+<h1>🛍️ Loja</h1><p>Moedas: <b id="shopCoins">0</b> 🍓</p>
+<div class="panel shop">
+<div class="item"><div class="avatar">🍓</div><b>Moranguinho</b><p class="price">Grátis</p><button class="mainbtn" onclick="choose('🍓')">Usar</button></div>
+<div class="item"><div class="avatar">🫐</div><b>Amora</b><p class="price">25 🍓</p><button class="mainbtn" onclick="buy('🫐',25)">Comprar</button></div>
+<div class="item"><div class="avatar">🍑</div><b>Pêssego</b><p class="price">40 🍓</p><button class="mainbtn" onclick="buy('🍑',40)">Comprar</button></div>
+<div class="item"><div class="avatar">🍒</div><b>Cereja</b><p class="price">60 🍓</p><button class="mainbtn" onclick="buy('🍒',60)">Comprar</button></div>
+</div><button class="back" onclick="show('home')">Voltar</button></section>
+
+<section id="gameScreen" class="screen" style="padding:0;display:none">
+<div id="game"><div class="hud"><div class="pill">🍓 <span id="gcoins">0</span></div><div class="pill">❤️ <span id="lives">3</span></div></div>
+<div class="road"></div><div class="stripe" style="top:-60px"></div><div class="stripe" style="top:150px"></div><div class="stripe" style="top:360px"></div><div class="stripe" style="top:570px"></div>
+<div id="hero">🍓</div><div id="objects"></div>
+<div class="controls"><button class="ctrl" id="left">←</button><button class="ctrl" id="right">→</button></div>
+<div id="gameover"><div class="card"><div style="font-size:70px">🍓</div><h1 id="endTitle">Fim!</h1><p id="endText"></p><button class="mainbtn" onclick="retry()">Jogar novamente</button><button class="back" onclick="show('map')">Mapa</button></div></div>
+</div></section>
+</div>
+<script>
+let data=JSON.parse(localStorage.getItem('morangodata')||'{"coins":0,"stars":0,"unlocked":3,"char":"🍓","owned":["🍓"]}');
+let game=null,keys={};
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem('morangodata',JSON.stringify(data));update()}
+function update(){['coins','shopCoins'].forEach(x=>$(x).textContent=data.coins);$('stars').textContent=data.stars}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');if(id==='shop')update();update()}
+function choose(c){if(data.owned.includes(c)){data.char=c;save();alert('Personagem escolhido! 🍓')}}
+function buy(c,p){if(data.owned.includes(c)){choose(c);return}if(data.coins>=p){data.coins-=p;data.owned.push(c);data.char=c;save();alert('Comprado! ✨')}else alert('Você ainda precisa de mais morangos! 🍓')}
+function startGame(level){game={level,score:0,lives:3,x:innerWidth/2,speed:230+level*35,spawn:0,running:true};$('gameScreen').style.display='flex';$('map').classList.remove('active');$('hero').textContent=data.char;$('gcoins').textContent=0;$('lives').textContent=3;$('gameover').style.display='none';$('objects').innerHTML='';requestAnimationFrame(loop)}
+function end(){game.running=false;$('endTitle').textContent=game.lives?'Fase concluída!':'Fim de jogo!';$('endText').textContent=`Você coletou ${game.score} morangos e ganhou ${Math.floor(game.score/5)} estrela(s).`;data.coins+=game.score;data.stars+=Math.floor(game.score/5);if(game.score>=12)data.unlocked=4;save();$('gameover').style.display='flex'}
+function retry(){startGame(game.level)}
+function loop(t){if(!game||!game.running)return;let dt=Math.min(.035,(t-(game.last||t))/1000);game.last=t;let dir=(keys.left?-1:0)+(keys.right?1:0);game.x+=dir*390*dt;game.x=Math.max(innerWidth*.12+30,Math.min(innerWidth*.88-30,game.x));$('hero').style.left=game.x+'px';game.spawn-=dt;if(game.spawn<=0){game.spawn=Math.max(.38,.9-game.score*.012);spawn()}document.querySelectorAll('.obj').forEach(o=>{let y=parseFloat(o.dataset.y)+game.speed*dt;o.dataset.y=y;o.style.top=y+'px';let ox=parseFloat(o.dataset.x);if(Math.abs(ox-game.x)<48&&y>innerHeight-190&&y<innerHeight-70){if(o.dataset.type==='berry'){game.score++;$('gcoins').textContent=game.score;o.remove()}else{game.lives--;$('lives').textContent=game.lives;o.remove();if(game.lives<=0){end()}}}if(y>innerHeight+50)o.remove()});if(game.running)requestAnimationFrame(loop)}
+function spawn(){let o=document.createElement('div');o.className='obj';let berry=Math.random()<.72;o.textContent=berry?'🍓':'🪨';o.dataset.type=berry?'berry':'rock';o.dataset.x=innerWidth*.12+35+Math.random()*(innerWidth*.76-70);o.dataset.y=-50;o.style.left=o.dataset.x+'px';o.style.top='-50px';$('objects').appendChild(o)}
+function hold(id,k){let b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});['pointerup','pointercancel','pointerleave'].forEach(x=>b.addEventListener(x,()=>keys[k]=false))}
+hold('left','left');hold('right','right');
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft')keys.left=true;if(e.key==='ArrowRight')keys.right=true});
+addEventListener('keyup',e=>{if(e.key==='ArrowLeft')keys.left=false;if(e.key==='ArrowRight')keys.right=false});
+addEventListener('resize',()=>{if(game&&game.running)game.x=Math.min(game.x,innerWidth*.88-30)});
+update();
+</script>
+</body></html>
